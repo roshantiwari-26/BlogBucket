@@ -92,13 +92,13 @@ into MySQL.
 Email:
 
 ```
-admin@blogbucket.com
+roshan@gmail.com
 ```
 
 Password:
 
 ```
-Admin@123
+12345678
 ```
 
 ### User
@@ -106,16 +106,14 @@ Admin@123
 Email:
 
 ```
-user@blogbucket.com
+arfan@yahoo.com
 ```
 
 Password:
 
 ```
-User@123
+123654
 ```
-
-> Replace these with your actual demo accounts if they are different.
 
 ---
 
