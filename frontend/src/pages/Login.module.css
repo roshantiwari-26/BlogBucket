@@ -1,0 +1,54 @@
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60%;
+  margin: 24px auto;
+  padding: 16px;
+  border: 2px solid gray;
+  border-radius: 8px;
+}
+
+.loginContainer div {
+  width: 100%;
+  flex: 0 1 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.loginContainer input {
+  width: 70%;
+  padding: 8px;
+  border: 1px solid gray;
+  border-radius: 8px;
+  outline: none;
+}
+
+.loginContainer input:focus {
+  box-shadow:
+    0 0 3px gray,
+    0 0 3px gray;
+}
+
+.loginContainer button {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  color: white;
+  background: gray;
+}
+
+.loginContainer button:active {
+  scale: calc(0.95);
+}
+
+@media (max-width: 768px) {
+  .loginContainer {
+    width: 80%;
+  }
+  .loginContainer input {
+    width: 90%;
+  }
+}
