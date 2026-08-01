@@ -9,7 +9,7 @@ function PostCard({ post }) {
         <img
           src={
             post.profile_picture
-              ? `http://localhost:5000/uploads${post.profile_picture}`
+              ? `https://blogbucket-api.onrender.com/uploads${post.profile_picture}`
               : null
           }
           alt=""

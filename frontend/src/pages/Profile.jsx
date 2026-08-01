@@ -71,7 +71,7 @@ function Profile() {
               user.profile_picture
                 ? user.profile_picture.startsWith("http")
                   ? user.profile_picture
-                  : `http://localhost:5000/uploads/${user.profile_picture}`
+                  : `https://blogbucket-api.onrender.com/uploads/${user.profile_picture}`
                 : "../public/avatar.svg"
             }
             alt={user.name}
@@ -132,7 +132,7 @@ function Profile() {
                   <img
                     src={
                       post.featured_image
-                        ? `http://localhost:5000/uploads/${post.featured_image}`
+                        ? `https://blogbucket-api.onrender.com/uploads/${post.featured_image}`
                         : "https://via.placeholder.com/400x200?text=No+Image"
                     }
                     alt={post.title}

@@ -62,7 +62,7 @@ function Header() {
       <img
         src={
           user?.profile_picture
-            ? `http://localhost:5000/uploads${user?.profile_picture}`
+            ? `https://blogbucket-api.onrender.com/uploads${user?.profile_picture}`
             : "../public/avatar.svg"
         }
       />
