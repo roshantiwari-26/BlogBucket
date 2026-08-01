@@ -19,6 +19,7 @@ app.use("/api/user", userRoutes);
 
 app.use(errorMiddleware);
 
+const PORT = process.env.PORT || 5000;
 app.listen(process.env.PORT, () =>
-  console.log("App server is running on PORT 5000"),
+  console.log(`App server is running on PORT ${PORT}`),
 );
