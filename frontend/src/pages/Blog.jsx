@@ -34,7 +34,7 @@ function Blog() {
         <img
           src={
             fullBlog.profile_picture
-              ? `http://localhost:5000/uploads${fullBlog.profile_picture}`
+              ? `https://blogbucket-api.onrender.com/uploads${fullBlog.profile_picture}`
               : null
           }
           alt=""
@@ -60,7 +60,7 @@ function Blog() {
       </p>
       {fullBlog.featured_image ? (
         <img
-          src={`http://localhost:5000/uploads${fullBlog.featured_image}`}
+          src={`https://blogbucket-api.onrender.com/uploads${fullBlog.featured_image}`}
           alt=""
           className="featured_image"
         />

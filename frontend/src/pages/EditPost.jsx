@@ -113,7 +113,6 @@ function EditPost() {
       <h2 className={styles.heading}>Edit Blog Post</h2>
 
       <form onSubmit={handleSubmit} className={styles.formGrid}>
-        {/* Main Section (Title & Content) */}
         <div className={styles.mainSection}>
           <div className={styles.formGroup}>
             <label htmlFor="title" className={styles.label}>
@@ -202,7 +201,7 @@ function EditPost() {
                     src={
                       existingImageUrl.startsWith("http")
                         ? existingImageUrl
-                        : `http://localhost:5000/uploads/${existingImageUrl}`
+                        : `https://blogbucket-api.onrender.com/uploads/${existingImageUrl}`
                     }
                     alt="Current Featured"
                     className={styles.previewImage}
@@ -212,7 +211,6 @@ function EditPost() {
             </div>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={isSubmitting}
