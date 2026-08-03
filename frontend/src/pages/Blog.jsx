@@ -4,6 +4,10 @@ import api from "../services/api";
 
 function Blog() {
   const [fullBlog, setFullBlog] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [comment, setComment] = useState("");
+  const [likes, setLikes] = useState(0);
+
   const { id } = useParams();
   useEffect(() => {
     const controller = new AbortController();
@@ -14,6 +18,8 @@ function Blog() {
         });
         console.log(data);
         setFullBlog(data);
+        setLikes(data.totalLikes);
+        setComments(data.totalComments);
       } catch (err) {
         console.log(err);
         return (

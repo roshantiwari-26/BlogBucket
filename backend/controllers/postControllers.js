@@ -16,7 +16,7 @@ const getPost = async (req, res, next) => {
   try {
     const postId = req.params.id;
     const [rows] = await pool.query(
-      "SELECT p.id, p.title, p.content, p.created_at, p.updated_at, p.featured_image, u.name AS author_name, u.profile_picture, c.category_name FROM posts p JOIN users u ON p.author_id=u.id JOIN categories c ON p.category_id=c.id WHERE p.id=?",
+      "SELECT p.id, p.title, p.content, p.created_at, p.updated_at, p.featured_image, u.name AS author_name, u.profile_picture, c.category_name (SELECT COUNT(*) FROM likes l WHERE l.post_id=p.id ) AS totalLikes, (SELECT COUNT(*) FROM comments cm WHERE cm.post_id=p.id ) AS totalComments FROM posts p JOIN users u ON p.author_id=u.id JOIN categories c ON p.category_id=c.id WHERE p.id=?",
       [postId],
     );
     if (rows.length === 0) {
