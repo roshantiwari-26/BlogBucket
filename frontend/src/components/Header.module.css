@@ -117,3 +117,21 @@
     font-size: 0.85rem;
   }
 }
+
+.create_button {
+  background-color: #2563eb;
+  color: white;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.create_button:hover {
+  background-color: #1d4ed8;
+}
+
+.create_active {
+  background-color: #1e40af;
+}

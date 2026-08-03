@@ -44,6 +44,19 @@ function Header() {
           </NavLink>
         )}
 
+        {user && (
+          <NavLink
+            to="/create-post"
+            className={({ isActive }) =>
+              isActive
+                ? `${styles.create_button} ${styles.create_active}`
+                : styles.create_button
+            }
+          >
+            + Create Post
+          </NavLink>
+        )}
+
         {user ? (
           <button onClick={logout}>Logout</button>
         ) : (
