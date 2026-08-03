@@ -217,6 +217,24 @@ const setLike = async (req, res, next) => {
   }
 };
 
+const getLikeStatus = async (req, res, next) => {
+  try {
+    const postId = req.params.id;
+    const userId = req.user.id;
+
+    const [rows] = await pool.query(
+      "SELECT 1 FROM likes WHERE user_id=? AND post_id=?",
+      [userId, postId],
+    );
+
+    return res.json({
+      liked: rows.length > 0,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const setProfilePic = async (req, res, next) => {
   try {
     const userId = req.user.id;
@@ -261,6 +279,7 @@ module.exports = {
   deletePost,
   createComment,
   setLike,
+  getLikeStatus,
   setProfilePic,
   setCoverImage,
 };

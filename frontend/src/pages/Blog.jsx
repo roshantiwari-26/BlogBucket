@@ -6,32 +6,45 @@ function Blog() {
   const [fullBlog, setFullBlog] = useState(null);
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
+  const [liked, setLiked] = useState(false);
 
   const { id } = useParams();
   useEffect(() => {
     const controller = new AbortController();
-    async function getFullBlog() {
-      try {
-        const { data } = await api.get(`/post/posts/${id}`, {
-          signal: controller.signal,
-        });
-        setFullBlog(data);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    getFullBlog();
-    getComments();
+    getFullBlog(controller.signal);
+    getComments(controller.signal);
+    getLikeStatus();
     return () => controller.abort();
   }, [id]);
 
-  async function getComments() {
+  async function getFullBlog(signal) {
     try {
-      const { data } = await api.get(`/post/posts/${id}/comments`);
+      const { data } = await api.get(`/post/posts/${id}`, {
+        signal,
+      });
+      setFullBlog(data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function getComments(signal) {
+    try {
+      const { data } = await api.get(`/post/posts/${id}/comments`, {
+        signal,
+      });
       setComments(data.comments);
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  async function getLikeStatus() {
+    try {
+      const { data } = await api.get(`/user/posts/${id}/like-status`);
+      setLiked(data.liked);
+    } catch (err) {
+      setLiked(false);
     }
   }
 
@@ -47,6 +60,16 @@ function Blog() {
 
       setComment("");
       await getComments();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function handleLike() {
+    try {
+      await api.post(`/user/posts/${id}/like`);
+      await getFullBlog();
+      await getLikeStatus();
     } catch (err) {
       console.log(err);
     }
@@ -91,7 +114,12 @@ function Blog() {
       ) : null}
       <h1>{fullBlog.title}</h1>
       <div className="post_stats">
-        <span>❤️ {fullBlog.totalLikes || 0} Likes</span>
+        <button
+          className={liked ? "liked_button" : "like_button"}
+          onClick={handleLike}
+        >
+          ❤️ {fullBlog.totalLikes} Likes
+        </button>
         <span>💬 {comments.length || 0} Comments</span>
       </div>
       <p className="post_content">{fullBlog.content}</p>

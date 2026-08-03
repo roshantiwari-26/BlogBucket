@@ -13,6 +13,7 @@ const {
   setLike,
   setProfilePic,
   setCoverImage,
+  getLikeStatus,
 } = require("../controllers/userControllers");
 const pool = require("../config/db");
 
@@ -33,6 +34,7 @@ router.put(
 router.delete("/posts/:id", authMiddleware, deletePost);
 router.post("/posts/:id/comments", authMiddleware, createComment);
 router.post("/posts/:id/like", authMiddleware, setLike);
+router.get("/posts/:id/like-status", authMiddleware, getLikeStatus);
 router.put(
   "/profile-picture",
   authMiddleware,
