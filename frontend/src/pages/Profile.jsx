@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import api from "../services/api";
 import styles from "./Profile.module.css";
+import avatar from "../../public/avatar.svg";
 
 function Profile() {
   const { user } = useContext(AuthContext);
@@ -72,7 +73,7 @@ function Profile() {
                 ? user.profile_picture.startsWith("http")
                   ? user.profile_picture
                   : `https://blogbucket-api.onrender.com/uploads/${user.profile_picture}`
-                : "../public/avatar.svg"
+                : avatar
             }
             alt={user.name}
             className={styles.avatar}

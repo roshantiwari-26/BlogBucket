@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import styles from "./Header.module.css";
+import avatar from "../../public/avatar.svg";
 
 function Header() {
   const { user, logout } = useContext(AuthContext);
@@ -76,7 +77,7 @@ function Header() {
         src={
           user?.profile_picture
             ? `https://blogbucket-api.onrender.com/uploads${user?.profile_picture}`
-            : "../public/avatar.svg"
+            : avatar
         }
       />
     </header>
