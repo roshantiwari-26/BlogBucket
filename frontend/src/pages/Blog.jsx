@@ -72,6 +72,10 @@ function Blog() {
         />
       ) : null}
       <h1>{fullBlog.title}</h1>
+      <div className="post_stats">
+        <span>❤️ {fullBlog.totalLikes} Likes</span>
+        <span>💬 {fullBlog.totalComments} Comments</span>
+      </div>
       <p className="post_content">{fullBlog.content}</p>
     </main>
   ) : (
