@@ -6,7 +6,6 @@ function Blog() {
   const [fullBlog, setFullBlog] = useState(null);
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
-  const [likes, setLikes] = useState(0);
 
   const { id } = useParams();
   useEffect(() => {
@@ -16,23 +15,42 @@ function Blog() {
         const { data } = await api.get(`/post/posts/${id}`, {
           signal: controller.signal,
         });
-        console.log(data);
         setFullBlog(data);
-        setLikes(data.totalLikes);
-        setComments(data.totalComments);
       } catch (err) {
         console.log(err);
-        return (
-          <main>
-            <h2>{err.message}</h2>
-          </main>
-        );
       }
     }
 
     getFullBlog();
+    getComments();
     return () => controller.abort();
   }, [id]);
+
+  async function getComments() {
+    try {
+      const { data } = await api.get(`/post/posts/${id}/comments`);
+      setComments(data.comments);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function handleCommentSubmit(e) {
+    e.preventDefault();
+
+    if (!comment.trim()) return;
+
+    try {
+      await api.post(`/user/posts/${id}/comments`, {
+        comment,
+      });
+
+      setComment("");
+      await getComments();
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return fullBlog ? (
     <main className="fullBlogContainer">
@@ -74,9 +92,46 @@ function Blog() {
       <h1>{fullBlog.title}</h1>
       <div className="post_stats">
         <span>❤️ {fullBlog.totalLikes || 0} Likes</span>
-        <span>💬 {fullBlog.totalComments || 0} Comments</span>
+        <span>💬 {comments.length || 0} Comments</span>
       </div>
       <p className="post_content">{fullBlog.content}</p>
+
+      <hr />
+
+      <form onSubmit={handleCommentSubmit} className="comment_form">
+        <textarea
+          rows={4}
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="Write a comment..."
+        />
+
+        <button type="submit" disabled={!comment.trim()}>
+          Post Comment
+        </button>
+      </form>
+
+      <hr />
+
+      <h3>Comments ({comments.length})</h3>
+
+      {comments.length === 0 ? (
+        <p>No comments yet.</p>
+      ) : (
+        comments.map((comment) => (
+          <div key={comment.id} className="comment_card">
+            <strong>{comment.author_name}</strong>
+            <small>
+              {new Intl.DateTimeFormat("en-IN", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              }).format(new Date(comment.created_at))}
+            </small>
+            <p>{comment.comment}</p>
+          </div>
+        ))
+      )}
     </main>
   ) : (
     <h2>Loading...</h2>
