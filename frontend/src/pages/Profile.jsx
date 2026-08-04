@@ -105,6 +105,7 @@ function Profile() {
           <input
             type="file"
             accept="image/*"
+            name="profile_pic"
             hidden
             ref={fileInputRef}
             onChange={handleProfileUpload}
