@@ -26,6 +26,10 @@
 
 .avatarWrapper {
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
 .avatar {
@@ -118,7 +122,6 @@
   margin: 24px 0;
 }
 
-/* Posts Grid Section */
 .postsSection {
   display: flex;
   flex-direction: column;
@@ -157,7 +160,6 @@
   gap: 24px;
 }
 
-/* Blog Cards */
 .card {
   display: flex;
   flex-direction: column;

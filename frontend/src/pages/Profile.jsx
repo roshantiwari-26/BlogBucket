@@ -110,10 +110,11 @@ function Profile() {
             onChange={handleProfileUpload}
           />
           <button
-            className="changePhotoBtn"
+            type="button"
+            className={styles.changePhotoBtn}
             onClick={() => fileInputRef.current.click()}
           >
-            Change Profile Picture
+            📷 Change Profile Picture
           </button>
         </div>
 
