@@ -142,14 +142,38 @@ const deletePost = async (req, res, next) => {
     const userId = req.user.id;
     const userRole = req.user.role;
     const postId = req.params.id;
-    const [rows] = await pool.query("SELECT author_id FROM posts WHERE id=?", [
-      postId,
-    ]);
+
+    const [rows] = await pool.query(
+      "SELECT author_id, featured_image FROM posts WHERE id=?",
+      [postId],
+    );
+
     if (rows.length === 0) {
       throw new AppError("No post found", 404);
     }
+
     if (rows[0].author_id === userId || userRole === "admin") {
+      await pool.query("DELETE FROM comments WHERE post_id=?", [postId]);
+
+      await pool.query("DELETE FROM likes WHERE post_id=?", [postId]);
+
+      if (rows[0].featured_image) {
+        try {
+          const imagePath = path.join(
+            __dirname,
+            "..",
+            "uploads",
+            rows[0].featured_image.replace(/^\//, ""),
+          );
+
+          await fs.unlink(imagePath);
+        } catch (err) {
+          console.log("Featured image not found.");
+        }
+      }
+
       await pool.query("DELETE FROM posts WHERE id=?", [postId]);
+
       return res.json({ message: "Post deleted successfully" });
     } else {
       throw new AppError("Unauthorized", 403);
