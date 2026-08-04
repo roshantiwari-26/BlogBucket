@@ -2,7 +2,6 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: "https://blogbucket-api.onrender.com/api",
-  withCredentials: true,
 });
 
 api.interceptors.request.use(
