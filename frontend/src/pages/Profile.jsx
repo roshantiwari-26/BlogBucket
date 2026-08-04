@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import api from "../services/api";
@@ -7,6 +7,7 @@ import avatar from "../../public/avatar.svg";
 
 function Profile() {
   const { user } = useContext(AuthContext);
+  const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
   const [posts, setPosts] = useState([]);
@@ -57,6 +58,29 @@ function Profile() {
     }
   };
 
+  async function handleProfileUpload(e) {
+    const file = e.target.files[0];
+
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("profile_pic", file);
+    try {
+      await api.put("/user/profile-picture", formData);
+
+      alert("Profile picture updated successfully!");
+
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+      alert(err.response?.data?.message || "Upload failed");
+    }
+  }
+
   if (!user) {
     return (
       <div className={styles.loading}>Please log in to view your profile.</div>
@@ -72,12 +96,25 @@ function Profile() {
               user.profile_picture
                 ? user.profile_picture.startsWith("http")
                   ? user.profile_picture
-                  : `https://blogbucket-api.onrender.com/uploads/${user.profile_picture}`
+                  : `https://blogbucket-api.onrender.com/uploads${user.profile_picture}`
                 : avatar
             }
             alt={user.name}
             className={styles.avatar}
           />
+          <input
+            type="file"
+            accept="image/*"
+            hidden
+            ref={fileInputRef}
+            onChange={handleProfileUpload}
+          />
+          <button
+            className="changePhotoBtn"
+            onClick={() => fileInputRef.current.click()}
+          >
+            Change Profile Picture
+          </button>
         </div>
 
         <div className={styles.userInfo}>
@@ -133,7 +170,7 @@ function Profile() {
                   <img
                     src={
                       post.featured_image
-                        ? `https://blogbucket-api.onrender.com/uploads/${post.featured_image}`
+                        ? `https://blogbucket-api.onrender.com/uploads${post.featured_image}`
                         : "https://via.placeholder.com/400x200?text=No+Image"
                     }
                     alt={post.title}

@@ -276,7 +276,34 @@
   cursor: not-allowed;
 }
 
-/* Responsive Mobile View */
+.changePhotoBtn {
+  margin-top: 12px;
+  padding: 10px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #374151;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.changePhotoBtn:hover {
+  background-color: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+.changePhotoBtn:active {
+  transform: scale(0.98);
+}
+
+.changePhotoBtn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
 @media (max-width: 640px) {
   .profileHeader {
     flex-direction: column;
