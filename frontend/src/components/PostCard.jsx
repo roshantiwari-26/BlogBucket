@@ -1,31 +1,42 @@
 import { useNavigate } from "react-router-dom";
+import styles from "./PostCard.module.css";
 
 function PostCard({ post }) {
   const navigate = useNavigate();
 
   return (
-    <article className="postCard" onClick={() => navigate(`/blog/${post.id}`)}>
-      <div className="profile_details">
+    <article className={styles.card}>
+      <div className={styles.cardImageWrapper}>
         <img
           src={
-            post.profile_picture
-              ? `https://blogbucket-api.onrender.com/uploads${post.profile_picture}`
-              : null
+            post.featured_image
+              ? `https://blogbucket-api.onrender.com/uploads${post.featured_image}`
+              : "https://via.placeholder.com/400x200?text=No+Image"
           }
-          alt=""
-          className="profile_pic"
+          alt={post.title}
+          className={styles.cardImage}
+          onClick={() => navigate(`/blog/${post.id}`)}
         />
-        <span>{post.author_name}</span>
-        <span className="created_at">
-          {new Intl.DateTimeFormat("en-IN", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          }).format(new Date(post.created_at))}
-        </span>
+        {post.category_name && (
+          <span className={styles.categoryBadge}>{post.category_name}</span>
+        )}
       </div>
-      <h2>{post.title}</h2>
-      <p className="post_content">{post.content}</p>
+
+      <div className={styles.cardBody}>
+        <h3 className={styles.cardTitle}>{post.title}</h3>
+        <p className={styles.cardSnippet}>
+          {post.content
+            ? post.content.substring(0, 100) + "..."
+            : "No content snippet available."}
+        </p>
+
+        <div className={styles.cardFooter}>
+          <span>{post.author_name}</span>
+          <span className={styles.postDate}>
+            {new Intl.DateTimeFormat("en-IN").format(new Date(post.created_at))}
+          </span>
+        </div>
+      </div>
     </article>
   );
 }

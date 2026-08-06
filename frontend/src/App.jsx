@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import Blog from "./pages/Blog";
 import CreatePost from "./pages/CreatePost";
 import EditPost from "./pages/EditPost";
+import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
           <Route path="/blog/:id" element={<Blog />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* <Route path="*" element={<NotFound />} /> */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
       </BrowserRouter>

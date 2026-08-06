@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api";
+import styles from "./FullBlog.module.css";
 
 function Blog() {
   const [fullBlog, setFullBlog] = useState(null);
@@ -76,8 +77,8 @@ function Blog() {
   }
 
   return fullBlog ? (
-    <main className="fullBlogContainer">
-      <div className="profile_details">
+    <main className={styles.fullBlogContainer}>
+      <div className={styles.profile_details}>
         <img
           src={
             fullBlog.profile_picture
@@ -85,7 +86,7 @@ function Blog() {
               : null
           }
           alt=""
-          className="profile_pic"
+          className={styles.profile_pic}
         />
         <span>{fullBlog.author_name}</span>
         {" | "}
@@ -97,7 +98,7 @@ function Blog() {
           }).format(new Date(fullBlog.created_at))}
         </span>
       </div>
-      <p className="created_at">
+      <p className={styles.created_at}>
         Last updated on:{" "}
         {new Intl.DateTimeFormat("en-IN", {
           day: "numeric",
@@ -109,24 +110,24 @@ function Blog() {
         <img
           src={`https://blogbucket-api.onrender.com/uploads${fullBlog.featured_image}`}
           alt=""
-          className="featured_image"
+          className={styles.featured_image}
         />
       ) : null}
       <h1>{fullBlog.title}</h1>
-      <div className="post_stats">
+      <div className={styles.post_stats}>
         <button
-          className={liked ? "liked_button" : "like_button"}
+          className={liked ? styles.liked_button : styles.like_button}
           onClick={handleLike}
         >
           ❤️ {fullBlog.totalLikes} Likes
         </button>
         <span>💬 {comments.length || 0} Comments</span>
       </div>
-      <p className="post_content">{fullBlog.content}</p>
+      <p className={styles.post_content}>{fullBlog.content}</p>
 
       <hr />
 
-      <form onSubmit={handleCommentSubmit} className="comment_form">
+      <form onSubmit={handleCommentSubmit} className={styles.comment_form}>
         <textarea
           rows={4}
           value={comment}
@@ -147,7 +148,7 @@ function Blog() {
         <p>No comments yet.</p>
       ) : (
         comments.map((comment) => (
-          <div key={comment.id} className="comment_card">
+          <div key={comment.id} className={styles.comment_card}>
             <strong>{comment.author_name}</strong>
             <small>
               {new Intl.DateTimeFormat("en-IN", {

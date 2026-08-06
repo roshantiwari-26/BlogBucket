@@ -1,21 +1,39 @@
-import { useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { useContext, useState } from "react";
+import { NavLink, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import styles from "./Header.module.css";
-import avatar from "../../public/avatar.svg";
+
+const avatarPlaceholder = "/avatar.svg";
+const logoSrc = "/BlogBucket-logo.png";
 
 function Header() {
   const { user, logout } = useContext(AuthContext);
+  const [showAuthBox, setShowAuthBox] = useState(false);
+
+  function toggleAuthBox() {
+    setShowAuthBox((prev) => !prev);
+  }
+
+  const getAvatarSrc = () => {
+    if (!user?.profile_picture) return avatarPlaceholder;
+    if (user.profile_picture.startsWith("http")) return user.profile_picture;
+    return `https://blogbucket-api.onrender.com/uploads${
+      user.profile_picture.startsWith("/") ? "" : "/"
+    }${user.profile_picture}`;
+  };
+
   return (
     <header className={styles.header}>
-      <h1>BlogBucket</h1>
-      <nav>
+      <Link to="/" className={styles.brand}>
+        <img src={logoSrc} alt="BlogBucket Logo" className={styles.logo} />
+        <h1 className={styles.title}>BlogBucket</h1>
+      </Link>
+
+      <nav className={styles.nav}>
         <NavLink
           to="/"
           className={({ isActive }) =>
-            isActive
-              ? `${styles.nav_button} ${styles.active}`
-              : styles.nav_button
+            `${styles.navLink} ${isActive ? styles.active : ""}`
           }
         >
           Home
@@ -25,9 +43,7 @@ function Header() {
           <NavLink
             to="/profile"
             className={({ isActive }) =>
-              isActive
-                ? `${styles.nav_button} ${styles.active}`
-                : styles.nav_button
+              `${styles.navLink} ${isActive ? styles.active : ""}`
             }
           >
             Profile
@@ -36,9 +52,7 @@ function Header() {
           <NavLink
             to="/register"
             className={({ isActive }) =>
-              isActive
-                ? `${styles.nav_button} ${styles.active}`
-                : styles.nav_button
+              `${styles.navLink} ${isActive ? styles.active : ""}`
             }
           >
             Register
@@ -49,37 +63,56 @@ function Header() {
           <NavLink
             to="/create-post"
             className={({ isActive }) =>
-              isActive
-                ? `${styles.create_button} ${styles.create_active}`
-                : styles.create_button
+              `${styles.createButton} ${isActive ? styles.createActive : ""}`
             }
           >
             + Create Post
           </NavLink>
         )}
-
-        {user ? (
-          <button onClick={logout}>Logout</button>
-        ) : (
-          <NavLink
-            to="/login"
-            className={({ isActive }) =>
-              isActive
-                ? `${styles.nav_button} ${styles.active}`
-                : styles.nav_button
-            }
-          >
-            Login
-          </NavLink>
-        )}
       </nav>
-      <img
-        src={
-          user?.profile_picture
-            ? `https://blogbucket-api.onrender.com/uploads${user?.profile_picture}`
-            : avatar
-        }
-      />
+
+      <div className={styles.userProfileContainer}>
+        <button
+          type="button"
+          className={styles.avatarButton}
+          onClick={toggleAuthBox}
+          aria-expanded={showAuthBox}
+          aria-label="User navigation menu"
+        >
+          <img
+            src={getAvatarSrc()}
+            alt="User Avatar"
+            className={styles.avatar}
+          />
+        </button>
+
+        <div
+          className={`${styles.authBox} ${
+            showAuthBox ? styles.authBoxOpen : ""
+          }`}
+        >
+          {user ? (
+            <button
+              type="button"
+              className={styles.logoutBtn}
+              onClick={() => {
+                logout();
+                setShowAuthBox(false);
+              }}
+            >
+              Logout
+            </button>
+          ) : (
+            <NavLink
+              to="/login"
+              className={styles.loginLink}
+              onClick={() => setShowAuthBox(false)}
+            >
+              Login
+            </NavLink>
+          )}
+        </div>
+      </div>
     </header>
   );
 }

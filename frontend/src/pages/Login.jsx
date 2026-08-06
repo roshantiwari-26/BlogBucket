@@ -1,71 +1,121 @@
-import { useState } from "react";
-import styles from "./Login.module.css";
+import { useState, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
-import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import styles from "./Login.module.css";
 
 function Login() {
   const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   async function loginUser(e) {
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
+
     try {
-      e.preventDefault();
       const { data } = await api.post("/auth/login", {
         email,
         password,
       });
-      console.log(data);
+
       login(data.user, data.accessToken);
-      alert("Login successful");
+
       navigate("/");
     } catch (err) {
-      console.log(err);
-      setError(err.response.data);
-      setEmail("");
-      setPassword("");
+      console.error("Login failed:", err);
+      const errorMessage =
+        err.response?.data?.message ||
+        (typeof err.response?.data === "string" ? err.response.data : null) ||
+        "Invalid email or password. Please try again.";
+
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
-    <form className={styles.loginContainer} onSubmit={loginUser}>
-      {error ? <h2>{error.message}</h2> : null}
-      <div>
-        <label htmlFor="email">Enter your email: </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={email}
-          required
-          onChange={(e) => {
-            setEmail(e.target.value);
-            setError(null);
-          }}
-        />
+    <main className={styles.mainContainer}>
+      <div className={styles.card}>
+        <div className={styles.headerGroup}>
+          <h1 className={styles.title}>Welcome Back</h1>
+          <p className={styles.subtitle}>
+            Enter your credentials to access your BlogBucket account
+          </p>
+        </div>
+
+        {error && (
+          <div className={styles.errorBanner} role="alert">
+            <span>{error}</span>
+          </div>
+        )}
+
+        <form className={styles.form} onSubmit={loginUser}>
+          <div className={styles.inputGroup}>
+            <label htmlFor="email" className={styles.label}>
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="name@example.com"
+              value={email}
+              required
+              disabled={isLoading}
+              className={styles.input}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) setError(null);
+              }}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label htmlFor="password" className={styles.label}>
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              value={password}
+              required
+              disabled={isLoading}
+              className={styles.input}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (error) setError(null);
+              }}
+            />
+          </div>
+
+          <button
+            type="submit"
+            className={styles.submitBtn}
+            disabled={isLoading || !email || !password}
+          >
+            {isLoading ? "Signing in..." : "Sign In"}
+          </button>
+        </form>
+
+        <div className={styles.cardFooter}>
+          <p>
+            Don't have an account?{" "}
+            <Link to="/register" className={styles.registerLink}>
+              Create one
+            </Link>
+          </p>
+        </div>
       </div>
-      <div>
-        <label htmlFor="password">Enter your password: </label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={password}
-          required
-          onChange={(e) => {
-            setPassword(e.target.value);
-            setError(null);
-          }}
-        />
-      </div>
-      <div>
-        <button type="submit">Login</button>
-      </div>
-    </form>
+    </main>
   );
 }
 
