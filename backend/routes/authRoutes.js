@@ -10,6 +10,4 @@ router.post("/register-request", requestRegisteration);
 router.post("/register-verify", verifyRegisteration);
 router.post("/login", login);
 
-router.post("/request-otp");
-
 module.exports = router;

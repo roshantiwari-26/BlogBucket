@@ -26,8 +26,8 @@ const requestRegisteration = async (req, res, next) => {
     const otp = generateOTP();
     await pool.query("DELETE FROM email_otps WHERE email=?", [data.email]);
     await pool.query(
-      "INSERT INTO email_otps(email, otp, expires_at) VALUES(?,?,DATE_ADD(NOW(), INTERVAL 5 MINUTE))",
-      [data.email, otp],
+      "INSERT INTO email_otps(email, otp, expires_at) VALUES(?,?,?)",
+      [data.email, otp, new Date(Date.now() + 1000 * 60 * 5)],
     );
     await sendOTP(data.email, otp);
     res.json({ message: "OTP sent sucessfully" });
@@ -53,7 +53,7 @@ const verifyRegisteration = async (req, res, next) => {
     }
     if (String(otp) !== String(rows[0].otp))
       throw new AppError("Inavlid OTP", 400);
-    if (new Date(rows[0].expires_at) < new Date())
+    if (new Date(Date.now()) >= rows[0].expires_at)
       throw new AppError("OTP Expired, Retry again", 400);
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
