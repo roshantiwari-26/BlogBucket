@@ -122,7 +122,9 @@ function Blog() {
       <div className={styles.post_stats}>
         <button
           className={liked ? styles.liked_button : styles.like_button}
-          onClick={user ? handleLike : alert("Please login/register to like")}
+          onClick={
+            user ? handleLike : () => alert("Please login/register to like")
+          }
         >
           ❤️ {fullBlog.totalLikes} Likes
         </button>
