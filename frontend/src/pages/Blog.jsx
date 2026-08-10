@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api";
 import styles from "./FullBlog.module.css";
 
 import DOMPurify from "dompurify";
+import { AuthContext } from "../context/AuthContext";
 
 function Blog() {
   const [fullBlog, setFullBlog] = useState(null);
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
   const [liked, setLiked] = useState(false);
+
+  const { user } = useContext(AuthContext);
 
   const { id } = useParams();
   useEffect(() => {
@@ -119,7 +122,7 @@ function Blog() {
       <div className={styles.post_stats}>
         <button
           className={liked ? styles.liked_button : styles.like_button}
-          onClick={handleLike}
+          onClick={user ? handleLike : alert("Please login/register to like")}
         >
           ❤️ {fullBlog.totalLikes} Likes
         </button>
