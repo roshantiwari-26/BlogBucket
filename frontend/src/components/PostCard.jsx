@@ -4,6 +4,15 @@ import styles from "./PostCard.module.css";
 function PostCard({ post }) {
   const navigate = useNavigate();
 
+  function getTextSnippet(html, length = 100) {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const text = (doc.body.textContent || "").replace(/\s+/g, " ").trim();
+
+    if (!text) return "No content snippet available.";
+
+    return text.length > length ? text.substring(0, length) + "..." : text;
+  }
+
   return (
     <article className={styles.card}>
       <div className={styles.cardImageWrapper}>
@@ -26,7 +35,7 @@ function PostCard({ post }) {
         <h3 className={styles.cardTitle}>{post.title}</h3>
         <p className={styles.cardSnippet}>
           {post.content
-            ? post.content.substring(0, 100) + "..."
+            ? getTextSnippet(post.content)
             : "No content snippet available."}
         </p>
 

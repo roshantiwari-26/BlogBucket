@@ -18,7 +18,16 @@
 }
 
 .fullBlogContainer .post_content {
+  padding: 12px;
   white-space: pre-line;
+}
+.fullBlogContainer .post_content p {
+  margin: 0 0 1rem;
+}
+
+.post_content ul,
+.post_content ol {
+  padding-left: 2rem;
 }
 
 .fullBlogContainer .profile_pic {

@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import styles from "./CreatePost.module.css";
 import api from "../services/api";
 
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+
 function CreatePost() {
   const [formData, setFormData] = useState({
     title: "",
@@ -14,6 +17,17 @@ function CreatePost() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
+
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: "",
+    onUpdate: ({ editor }) => {
+      setFormData((prev) => ({
+        ...prev,
+        content: editor.getHTML(),
+      }));
+    },
+  });
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -83,7 +97,14 @@ function CreatePost() {
       console.log("Server Response:", data);
       alert("Post created successfully!");
 
-      setFormData({ title: "", category: "tech", content: "" });
+      setFormData({
+        title: "",
+        category: categories[0]?.id || "",
+        content: "",
+      });
+      if (editor) {
+        editor.commands.clearContent();
+      }
       setImageFile(null);
       setImagePreview(null);
     } catch (error) {
@@ -120,15 +141,54 @@ function CreatePost() {
             <label htmlFor="content" className={styles.label}>
               Blog Content
             </label>
-            <textarea
-              id="content"
-              name="content"
-              value={formData.content}
-              onChange={handleChange}
-              placeholder="Write your blog content here..."
-              required
-              className={styles.textarea}
-            />
+            <div className={styles.toolbar}>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleBold().run()}
+              >
+                Bold
+              </button>
+
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleItalic().run()}
+              >
+                Italic
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 1 }).run()
+                }
+              >
+                H1
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 2 }).run()
+                }
+              >
+                H2
+              </button>
+
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleBulletList().run()}
+              >
+                • List
+              </button>
+
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+              >
+                1. List
+              </button>
+            </div>
+            <EditorContent editor={editor} className={styles.editor} />
           </div>
         </div>
 

@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import api from "../services/api";
 import styles from "./FullBlog.module.css";
 
+import DOMPurify from "dompurify";
+
 function Blog() {
   const [fullBlog, setFullBlog] = useState(null);
   const [comments, setComments] = useState([]);
@@ -108,7 +110,7 @@ function Blog() {
       </p>
       {fullBlog.featured_image ? (
         <img
-          src={`https://blogbucket-api.onrender.com/uploads${fullBlog.featured_image}`}
+          src={`http://localhost:5000/uploads${fullBlog.featured_image}`}
           alt=""
           className={styles.featured_image}
         />
@@ -123,7 +125,12 @@ function Blog() {
         </button>
         <span>💬 {comments.length || 0} Comments</span>
       </div>
-      <p className={styles.post_content}>{fullBlog.content}</p>
+      <div
+        className={styles.post_content}
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(fullBlog.content),
+        }}
+      />
 
       <hr />
 

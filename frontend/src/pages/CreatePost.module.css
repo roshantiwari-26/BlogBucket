@@ -49,8 +49,7 @@
 }
 
 .input,
-.select,
-.textarea {
+.select {
   width: 100%;
   padding: 12px;
   font-size: 15px;
@@ -62,15 +61,47 @@
 }
 
 .input:focus,
-.select:focus,
-.textarea:focus {
+.select:focus {
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.textarea {
-  min-height: 380px;
-  resize: vertical;
+.editor :global(.ProseMirror) {
+  min-height: 300px;
+  border: 1px solid #d1d5db;
+  padding: 12px;
+  border-radius: 6px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.editor :global(.ProseMirror:focus) {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.toolbar {
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  background: #f9fafb;
+  flex-wrap: wrap;
+}
+
+.toolbar button {
+  padding: 5px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  background: #e5e7eb;
 }
 
 .fileInput {

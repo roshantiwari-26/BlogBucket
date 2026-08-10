@@ -3,6 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import styles from "./EditPost.module.css";
 
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+
 function EditPost() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -21,14 +24,24 @@ function EditPost() {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: "",
+    onUpdate: ({ editor }) => {
+      setFormData((prev) => ({
+        ...prev,
+        content: editor.getHTML(),
+      }));
+    },
+  });
+
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
         setLoading(true);
 
         const catRes = await api.get("/user/categories");
-        const fetchedCategories = catRes.data;
-        setCategories(fetchedCategories);
+        setCategories(catRes.data);
 
         const postRes = await api.get(`/post/posts/${id}`);
         const post = postRes.data;
@@ -52,6 +65,12 @@ function EditPost() {
 
     fetchInitialData();
   }, [id]);
+
+  useEffect(() => {
+    if (editor && formData.content) {
+      editor.commands.setContent(formData.content, false);
+    }
+  }, [editor, formData.content]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -134,15 +153,58 @@ function EditPost() {
             <label htmlFor="content" className={styles.label}>
               Blog Content
             </label>
-            <textarea
-              id="content"
-              name="content"
-              value={formData.content}
-              onChange={handleChange}
-              placeholder="Write your blog content here..."
-              required
-              className={styles.textarea}
-            />
+            <div className={styles.toolbar}>
+              <button
+                type="button"
+                onClick={() => editor?.chain().focus().toggleBold().run()}
+              >
+                Bold
+              </button>
+
+              <button
+                type="button"
+                onClick={() => editor?.chain().focus().toggleItalic().run()}
+              >
+                Italic
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  editor?.chain().focus().toggleHeading({ level: 1 }).run()
+                }
+              >
+                H1
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  editor?.chain().focus().toggleHeading({ level: 2 }).run()
+                }
+              >
+                H2
+              </button>
+
+              <button
+                type="button"
+                onClick={() => editor?.chain().focus().toggleBulletList().run()}
+              >
+                • List
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  editor?.chain().focus().toggleOrderedList().run()
+                }
+              >
+                1. List
+              </button>
+            </div>
+            <div className={styles.editorWrapper}>
+              <EditorContent editor={editor} className={styles.editor} />
+            </div>
           </div>
         </div>
 
