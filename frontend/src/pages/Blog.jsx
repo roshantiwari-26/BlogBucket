@@ -110,7 +110,7 @@ function Blog() {
       </p>
       {fullBlog.featured_image ? (
         <img
-          src={`http://localhost:5000/uploads${fullBlog.featured_image}`}
+          src={`https://blogbucket-api.onrender.com/uploads${fullBlog.featured_image}`}
           alt=""
           className={styles.featured_image}
         />
