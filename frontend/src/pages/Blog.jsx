@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api";
 import styles from "./FullBlog.module.css";
@@ -13,6 +13,7 @@ function Blog() {
   const [liked, setLiked] = useState(false);
 
   const { user } = useContext(AuthContext);
+  const commentInputRef = useRef(null);
 
   const { id } = useParams();
   useEffect(() => {
@@ -81,6 +82,15 @@ function Blog() {
     }
   }
 
+  function handleCommentButtonClick() {
+    if (commentInputRef.current) {
+      commentInputRef.current.scrollIntoView({ behavior: "smooth" });
+      setTimeout(() => {
+        commentInputRef.current.focus();
+      }, 1000);
+    }
+  }
+
   return fullBlog ? (
     <main className={styles.fullBlogContainer}>
       <div className={styles.profile_details}>
@@ -128,7 +138,12 @@ function Blog() {
         >
           ❤️ {fullBlog.totalLikes} Likes
         </button>
-        <span>💬 {comments.length || 0} Comments</span>
+        <button
+          onClick={handleCommentButtonClick}
+          className={styles.comment_button}
+        >
+          💬 {comments.length || 0} Comments
+        </button>
       </div>
       <div
         className={styles.post_content}
@@ -143,6 +158,7 @@ function Blog() {
         <textarea
           rows={4}
           value={comment}
+          ref={commentInputRef}
           onChange={(e) => setComment(e.target.value)}
           placeholder="Write a comment..."
         />
