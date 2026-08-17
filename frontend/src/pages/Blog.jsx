@@ -2,6 +2,9 @@ import { useContext, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api";
 import styles from "./FullBlog.module.css";
+import { ThumbsUp, MessageSquareText } from "lucide-react";
+
+import { useToast } from "../context/ToastContext";
 
 import DOMPurify from "dompurify";
 import { AuthContext } from "../context/AuthContext";
@@ -13,6 +16,7 @@ function Blog() {
   const [liked, setLiked] = useState(false);
 
   const { user } = useContext(AuthContext);
+  const { showToast } = useToast();
   const commentInputRef = useRef(null);
 
   const { id } = useParams();
@@ -57,7 +61,11 @@ function Blog() {
 
   async function handleCommentSubmit(e) {
     e.preventDefault();
-
+    if (!user) {
+      showToast("Please Login/Register to Comment", "error");
+      setComment("");
+      return;
+    }
     if (!comment.trim()) return;
 
     try {
@@ -130,20 +138,24 @@ function Blog() {
       ) : null}
       <h1>{fullBlog.title}</h1>
       <div className={styles.post_stats}>
-        <button
-          className={liked ? styles.liked_button : styles.like_button}
-          onClick={
-            user ? handleLike : () => alert("Please login/register to like")
-          }
-        >
-          ❤️ {fullBlog.totalLikes} Likes
-        </button>
-        <button
-          onClick={handleCommentButtonClick}
-          className={styles.comment_button}
-        >
-          💬 {comments.length || 0} Comments
-        </button>
+        <span>
+          <ThumbsUp
+            className={liked ? styles.liked_button : styles.like_button}
+            onClick={
+              user
+                ? handleLike
+                : () => showToast("Please Login/Register to Like", "error")
+            }
+          />
+          {fullBlog.totalLikes}
+        </span>
+        <span>
+          <MessageSquareText
+            onClick={handleCommentButtonClick}
+            className={styles.comment_button}
+          />
+          {comments.length || 0}
+        </span>
       </div>
       <div
         className={styles.post_content}
