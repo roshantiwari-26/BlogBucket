@@ -110,15 +110,15 @@
 }
 
 .like_button {
+  width: 32px;
+  height: 32px;
   border: none;
   background: transparent;
   cursor: pointer;
-  width: 32px;
-  height: 32px;
 }
 
 .like_button:hover {
-  color: crimson;
+  stroke: crimson;
 }
 
 .liked_button {
